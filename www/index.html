@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="capacitor.js"></script>
+
+    <style>
+        #map {
+            height: 100%;
+        }
+    </style>
+
+    <title>Ionic Obligatorio</title>
+</head>
+
+<body>
+
+    <ion-app>
+        <ion-router id="ruteo">
+            <ion-route></ion-route>
+            <ion-route url="/" component="page-home"></ion-route>
+            <ion-route url="/login" component="page-login"></ion-route>
+            <ion-route url="/registro" component="page-registro"></ion-route>
+            <ion-route url="/gastos" component="page-gasto"></ion-route>
+            <ion-route url="/ingreso" component="page-ingreso"></ion-route>
+            <ion-route url="/movimientos" component="page-movimientos"></ion-route>
+            <ion-route url="/totales" component="page-totales"></ion-route>
+            <ion-route url="/cajeros" component="page-cajeros"></ion-route>
+        </ion-router>
+        <ion-nav></ion-nav>
+
+        <ion-menu side="start" menu-id="first" content-id="main" id="menu">
+
+            <ion-header>
+                <!-- Creamos el menu, creamos la secciond e la cabecera y dentro creamos la barra, toolbar que es de color azul, primary es azul-->
+                <ion-toolbar color="primary">
+                    <ion-title>Menu Principal</ion-title>
+                </ion-toolbar>
+            </ion-header>
+
+            <ion-content id="menuOpciones">
+                <!-- Creamos el contenido del menu -->
+                <!-- SE LO PASAMOS POR LA FUNCION ArmarMenuOpciones en codigo.js -->
+            </ion-content>
+        </ion-menu>
+        <div id="main"></div> <!-- Se necesita que se despliege en un div. sino el menu no se ve.-->
+
+
+        <!-- PANTALLAS ! -->
+
+        <!-- Pantalla home -->
+
+        <page-home class="ion-page" id="pantalla-home">
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <p id="msgBienvenida"></p>
+                <ion-list id="botonesBienvenida">
+                    <ion-item>
+
+                    </ion-item>
+                </ion-list>
+                <ion-button expand="block" onclick="Share()">Share</ion-button>
+            </ion-content>
+        </page-home>
+
+        <!-- Pantalla Registro -->
+
+        <page-registro class="ion-page" id="pantalla-registro">
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>Username</ion-label>
+                        <ion-input value="" id="txtRegistroUser"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Password</ion-label>
+                        <ion-input value="" type="password" id="txtRegistroPassowrd"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Departamento:</ion-label>
+                        <ion-input value="" type="text" id="txtRegistroDepartamento"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Ciudad:</ion-label>
+                        <ion-input value="" type="text" id="txtRegistroCiudad"></ion-input>
+                    </ion-item>
+                    <ion-button expand="full" id="btnRegistro">Registro</ion-button>
+                </ion-list>
+
+            </ion-content>
+        </page-registro>
+
+        <!-- PANTALLA LOGIN ! -->
+        <page-login class="ion-page" id="pantalla-login">
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>Username</ion-label>
+                        <ion-input value="lucas12345" id="txtLoginUsername"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Password</ion-label>
+                        <ion-input value="lucas12345" type="password" id="txtLoginPass"></ion-input>
+                    </ion-item>
+                    <ion-button expand="full" id="btnLogin">LOGIN</ion-button>
+                </ion-list>
+
+            </ion-content>
+        </page-login>
+
+        <!-- PANTALLA GASTO  ! -->
+
+        <page-gasto class="ion-page" id="pantalla-gasto">
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+
+            <ion-content>
+                <ion-list>
+
+                    <ion-item>
+                        <ion-label>Concepto:</ion-label>
+                        <ion-input value="" id="txtGastoConcepto"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Monto:</ion-label>
+                        <ion-input type="number" value="" id="GastoMonto" placeholder="$"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-select id="slcRubro" placeholder="Select Rubro">
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-select id="slcMedioGasto" placeholder="Select Medio de pago">
+                            <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+                            <ion-select-option value="Tarjeta Débito">Tarjeta Débito</ion-select-option>
+                            <ion-select-option value="Tarjeta Crédito">Tarjeta Crédito</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-datetime id="fechaGasto"></ion-datetime>
+
+                    <ion-button expand="full" id="btnGasto">Agregar Gasto</ion-button>
+                </ion-list>
+
+            </ion-content>
+        </page-gasto>
+
+        <!-- PANTALLA INGRESO -->
+        <page-ingreso class="ion-page" id="pantalla-ingreso">
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>Concepto:</ion-label>
+                        <ion-input value="" id="txtIngresoConcepto"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Monto:</ion-label>
+                        <ion-input type="number" placeholder="$" value="" id="txtIngresoMonto"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-select id="slcRubroIngreso" placeholder="Select Rubro">
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-select id="slcMedioIngreso" placeholder="Select Medio de pago">
+                            <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+                            <ion-select-option value="Banco">Banco</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-datetime id="fechaIngreso"></ion-datetime>
+
+                    <ion-button expand="full" id="btnIngreso">Agregar Ingreso</ion-button>
+                </ion-list>
+            </ion-content>
+        </page-ingreso>
+
+        <!-- Pantalla MOVIMIENTOS -->
+        <page-movimientos class="ion-page" id="pantalla-movimientos">
+
+            <ion-header>
+
+                <ion-toolbar>
+                    <ion-title>MOVIMIENTOS</ion-title>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-title>Filtro</ion-title>
+            <ion-item>
+                <ion-select value="0" placeholder="Todos los movimientos" id="slcFiltroMovimientos" >
+                    <ion-select-option value="0">Todos</ion-select-option>
+                    <ion-select-option value="1">Gastos</ion-select-option>
+                    <ion-select-option value="2">Ingresos</ion-select-option>
+                </ion-select>
+                <ion-button id="btnFiltroMovimientos" onclick="PruebaFetch()">Aplicar</ion-button>
+            </ion-item>
+
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-list id="listaMovimientos">
+                        </ion-list>
+                    </ion-item>
+                </ion-list>
+                <div style="height: 150px"></div>
+            </ion-content>
+            
+        </page-movimientos>
+
+        <!-- PANTALLA TOTALES -->
+        <page-totales class="ion-page" id="pantalla-totales">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>TOTALES</ion-title>
+                    <!-- Menu hamburgesa. -->
+                    <ion-buttons slot="start" [collapse]="true">
+
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+
+
+            </ion-header>
+            <ion-content [fullscreen]="true">
+                <ion-header collapse="condense">
+                    <ion-toolbar>
+                        <ion-title size="large">TOTAL</ion-title>
+                        <ion-buttons [collapse]="true" slot="end">
+
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+
+                <ion-list>
+                    <ion-item id="gastosResumen"></ion-item>
+                    <ion-item id="ingresosResumen"></ion-item>
+                    <ion-item id="totalResumen"></ion-item>
+                </ion-list>
+            </ion-content>
+        </page-totales>
+
+        <!-- PANTALLA CAJEROS -->
+        <page-cajeros class="ion-page" id="pantalla-cajeros">
+
+            <ion-header>
+                <ion-toolbar>
+                    <!-- Menu hamburgesa. -->
+                    <ion-title>CAJEROS</ion-title>
+                    <ion-buttons slot="start" [collapse]="true">
+                        <ion-menu-button></ion-menu-button>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <div id="map"></div>
+            </ion-content>
+        </page-cajeros>
+
+
+    </ion-app>
+
+    <script src="estructura.js"></script>
+    <script src="ingresos.js"></script>
+    <script src="gastos.js"></script>
+    <script src="movimientos.js"></script>
+    <script src="codigo.js"></script>
+    <script src="capacitor.js"></script>
+    <script src="mapa.js"></script>
+
+</body>
+
+</html>
